@@ -1,0 +1,424 @@
+# Cursor Rules for clean-python-craft
+Use when designing, writing, refactoring, or reviewing Python systems where high-level intent, mathematical models, or domain logic must translate into clean, type-safe, scale-invariant, and maintainable code. Enforces protocols, Pydantic v2 boundaries, coordinate-aware multidimensional data, algorithmic preconditioning, and explicit failure semantics inspired by scientific production architectures.
+
+## Invariant Guidelines
+---
+name: clean-python-craft
+description: Use when designing, writing, refactoring, or reviewing Python systems where high-level intent, mathematical models, or domain logic must translate into clean, type-safe, scale-invariant, and maintainable code. Enforces protocols, Pydantic v2 boundaries, coordinate-aware multidimensional data, algorithmic preconditioning, and explicit failure semantics inspired by scientific production architectures.
+---
+
+# Clean Python Craft: Transforming Intent into Production Code
+
+## Overview
+
+**Clean Python is not about aesthetic minimalism; it is the zero-loss translation of domain intent into executable invariants.**
+
+In high-stakes computational, scientific, and production systems (such as `pymc_marketing/mmm/budget_optimizer.py`), code failure rarely stems from raw syntax errors. It stems from **semantic impedance mismatch**:
+- Treating multi-dimensional business quantities as anonymous flat arrays.
+- Conflating mathematical optimization sign conventions (`min -f(x)` vs `max f(x)`).
+- Feeding ill-conditioned unscaled variables into numerical gradient solvers.
+- Permitting late-binding closure leakage in dynamic loop callbacks.
+- Tying orchestrators directly to concrete classes rather than structural protocols.
+
+This skill codifies the architectural discipline required to turn domain intent into resilient, typed, self-documenting Python code.
+
+---
+
+## Why This Skill Is Needed
+
+Data science, algorithmic trading, scientific computing, and backend Python architectures frequently suffer from brittle, un-maintainable code when translated from theoretical models to production software. Mathematical scripts often rely on loose dictionaries, undocumented axis permutations in raw NumPy tensors, unchecked dynamic kwargs, and silent numerical instabilities. Without disciplined structural protocols and scale-invariant numerical bridges, systems fail silently in production environments, causing catastrophic financial or computational errors.
+
+## Target State
+
+A unified, protocol-driven Python engineering standard where high-level domain intent maps directly to typed, scale-invariant, coordinate-aware, and testable production architectures. The resulting systems enforce strict runtime boundaries via Pydantic v2, preserve dimensional semantic labels through xarray/dataclasses, guarantee numerical stability across solver algorithms, and provide backward-compatible result envelopes with zero technical debt.
+
+---
+
+## Quick Reference: Intent vs. Anti-Pattern vs. Clean Pattern
+
+| Domain Intent | ❌ Slop / Anti-Pattern | ✅ Clean Python Pattern |
+|---|---|---|
+| **Structural Decoupling** | Concrete base class inheritance or `abc.ABC` forcing rigid MRO hierarchies | `typing.Protocol` with runtime duck-typing and structural subtyping |
+| **Input Boundary Validation** | Ad-hoc `assert` statements or manual `if not isinstance(...)` chains inside methods | Pydantic v2 `BaseModel` with `InstanceOf[T]`, `Field(gt=0)`, and `model_validator` |
+| **Multi-Dimensional Semantics** | Anonymous `np.ndarray` indexed by implicit integer offsets `x[:, 0, 3]` | Named dimension coordinates via `xarray.DataArray` or semantic dataclasses |
+| **Closure Binding in Loops** | Dynamic lambda functions referencing loop variables (`lambda x: f(x, s)`) | Default argument binding (`lambda x, f=f, s=s: f(x) / s`) preventing late capture |
+| **Sign Convention Safety** | Implicit negation buried in solver calls; returning raw negated values | Explicit dual-view properties (`.objective` for solver, `.utility` for domain) |
+| **Numerical Conditioning** | Passing raw monetary values (\$1M) and unit rates (0.001) into gradient solvers | Objective & constraint normalization using finite-difference gradient scales |
+| **Result Return & Evolution** | Returning a brittle tuple `(a, b)` that breaks callers when fields are added | Rich Result Envelope with `__iter__` for tuple unpacking + typed attributes |
+| **Error Diagnostics** | Generic `ValueError` with cryptic numpy shape mismatch messages | Custom domain exception (`DomainException`) detailing failing coordinates & values |
+
+---
+
+## The 6 Pillars of Intent-to-Code Transformation
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│ 1. Structural Contracts (typing.Protocol)                   │
+└───────────────────────────┬─────────────────────────────────┘
+                            ▼
+┌─────────────────────────────────────────────────────────────┐
+│ 2. Boundary Fortress (Pydantic v2 + Immutable Value Objects)│
+└───────────────────────────┬─────────────────────────────────┘
+                            ▼
+┌─────────────────────────────────────────────────────────────┐
+│ 3. Semantic Coordinates (Named Dims over Raw Tensors)       │
+└───────────────────────────┬─────────────────────────────────┘
+                            ▼
+┌─────────────────────────────────────────────────────────────┐
+│ 4. Symbolic Graph Separation & Numerical Conditioning       │
+└───────────────────────────┬─────────────────────────────────┘
+                            ▼
+┌─────────────────────────────────────────────────────────────┐
+│ 5. Leak-Free Closures & Safe Mathematical Conventions       │
+└───────────────────────────┬─────────────────────────────────┘
+                            ▼
+┌─────────────────────────────────────────────────────────────┐
+│ 6. Rich Result Envelopes with Dual-Contract Compatibility   │
+└─────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 1. Structural Contracts via `typing.Protocol`
+
+Decouple callers from concrete implementations. A consumer should care about *what an object can do*, not where it sits in an inheritance hierarchy.
+
+```python
+from collections.abc import Callable
+from typing import Any, Protocol, runtime_checkable
+
+@runtime_checkable
+class OptimizerCompatibleModel(Protocol):
+    """Structural protocol defining the minimal contract for optimizable models.
+    
+    Any statistical or machine learning model satisfying this interface can be
+    optimized without inheriting from a common framework base class.
+    """
+
+    channel_scales: Any
+    idata: Any
+
+    def optimization_model(self, num_periods: int) -> Any:
+        """Return a compiled or conditioned computational model graph."""
+        ...
+```
+
+### Invariant:
+Never check `isinstance(obj, ConcreteClass)` in core domain logic. Check structural protocol compliance or delegate to the protocol contract.
+
+---
+
+## 2. Boundary Fortress: Pydantic v2 and Fail-Fast Validation
+
+All external input parsing, shape checking, and range constraints must be resolved at the perimeter before any business logic or computational compilation executes.
+
+```python
+from typing import Annotated
+from pydantic import BaseModel, ConfigDict, Field, InstanceOf, model_validator
+
+class AllocatorConfig(BaseModel):
+    model_config = ConfigDict(arbitrary_types_allowed=True, extra="forbid")
+
+    num_periods: Annotated[int, Field(gt=0, description="Horizon length in periods")]
+    budget: Annotated[float, Field(gt=0.0, description="Total budget in currency units")]
+    channel_scales: Annotated[dict[str, float], Field(default_factory=dict)]
+
+    @model_validator(mode="after")
+    def validate_positive_scales(self) -> "AllocatorConfig":
+        for channel, scale in self.channel_scales.items():
+            if scale <= 0.0:
+                raise ValueError(
+                    f"Scale factor for channel '{channel}' must be positive, got {scale}"
+                )
+        return self
+```
+
+### Invariant:
+Do not perform defensive type assertions deep inside computation loops. If an argument enters a method, it is guaranteed valid by the boundary schema.
+
+---
+
+## 3. Semantic Coordinates: Named Dimensions over Raw Tensors
+
+Raw NumPy arrays and multidimensional tensors drop semantic context. A column index `2` does not tell the engineer whether it represents "Channel: Social", "Geo: US", or "Week: 4".
+
+Always preserve coordinate identity through the domain layer:
+
+```python
+import numpy as np
+import xarray as xr
+
+def build_labeled_decision_grid(
+    channels: list[str],
+    geos: list[str],
+    periods: int,
+) -> xr.DataArray:
+    """Instantiate a decision variable grid carrying explicit coordinate labels."""
+    data = np.zeros((periods, len(channels), len(geos)), dtype=np.float64)
+    return xr.DataArray(
+        data=data,
+        dims=("date", "channel", "geo"),
+        coords={
+            "date": np.arange(periods),
+            "channel": channels,
+            "geo": geos,
+        },
+        name="allocated_spend",
+    )
+```
+
+### Invariant:
+Vector packing and unpacking must be isolated to the boundary of numerical solvers (e.g., SciPy, NLopt). All internal business assertions and return artifacts must operate on labeled structures.
+
+---
+
+## 4. Numerical Conditioning and Scale Invariance
+
+Gradient-based solvers (such as SLSQP, L-BFGS-B) fail or crawl when decision variables span wildly disparate magnitudes (e.g. spend in $\$10^6$ vs. conversion rates in $10^{-4}$).
+
+Clean Python transforms the problem space into normalized unit scales:
+
+```python
+def compute_objective_scale_from_gradient(gradient: np.ndarray, epsilon: float = 1e-8) -> float:
+    """Derive a scale factor that normalizes the steepest gradient component to ~1.0.
+    
+    Prevents floating-point underflow or premature stopping under fixed solver ftol.
+    """
+    max_grad = np.max(np.abs(gradient))
+    if max_grad > epsilon:
+        return float(max_grad)
+    return 1.0
+
+def rescale_problem(
+    objective_fn: Callable[[np.ndarray], tuple[float, np.ndarray]],
+    start: np.ndarray,
+) -> tuple[Callable[[np.ndarray], tuple[float, np.ndarray]], float]:
+    """Wrap objective function to evaluate on a scale-invariant coordinate system."""
+    _, initial_grad = objective_fn(start)
+    scale = compute_objective_scale_from_gradient(initial_grad)
+    
+    def scaled_objective_fn(x: np.ndarray) -> tuple[float, np.ndarray]:
+        val, grad = objective_fn(x)
+        return val / scale, grad / scale
+        
+    return scaled_objective_fn, scale
+```
+
+---
+
+## 5. Closure Invariant: Safe Dynamic Lambdas in Loops
+
+Python closures bind variables by reference (late binding). Defining a lambda inside a loop that references loop variables silently binds to the *final* iteration state.
+
+### The Slop Bug:
+```python
+# ❌ BUG: Every constraint uses the last loop variable's scale!
+scaled_constraints = []
+for c in constraints:
+    eval_fn = c["fun"]
+    scale_val = c["scale"]
+    scaled_constraints.append(lambda x: eval_fn(x) / scale_val)
+```
+
+### The Clean Pattern:
+```python
+# ✅ CLEAN: Default arguments bind the current iteration values immediately
+scaled_constraints = []
+for c in constraints:
+    scaled_constraints.append({
+        "type": c["type"],
+        "fun": lambda x, fun=c["fun"], scale=c["scale"]: np.asarray(fun(x)) / scale,
+        "jac": lambda x, jac=c["jac"], scale=c["scale"]: np.asarray(jac(x)) / scale,
+    })
+```
+
+---
+
+## 6. Sign Conventions and Dual-View Safety
+
+Mathematical solvers minimize `fun(x)`. Economists and business stakeholders maximize `utility(x)`. Conflating `objective = -utility` causes silent sign bugs across teams.
+
+Make both perspectives explicit through property projections:
+
+```python
+from dataclasses import dataclass
+
+@dataclass(frozen=True)
+class PlanEvaluation:
+    """Evaluation envelope reconciling solver mechanics with business utility."""
+
+    objective: float  # Minimizer's scale: -utility
+    objective_gradient: dict[str, float]
+    feasible: bool
+
+    @property
+    def utility(self) -> float:
+        """Business utility metric being maximized (e.g. revenue, conversions)."""
+        return -self.objective
+
+    @property
+    def utility_gradient(self) -> dict[str, float]:
+        """Marginal return per unit spend: positive value indicates positive ROI."""
+        return {k: -v for k, v in self.objective_gradient.items()}
+```
+
+---
+
+## 7. Dual-Contract Result Envelopes
+
+When modernizing an API, never force breaking changes on callers expecting legacy unpackable tuples `(allocations, diagnostics)`. Support both structured attribute access and legacy sequence iteration:
+
+```python
+from typing import Any
+import xarray as xr
+
+class OptimizationResult:
+    """Rich domain result supporting both attribute access and tuple unpacking."""
+
+    def __init__(self, allocations: xr.DataArray, raw_solver_output: Any):
+        self.allocations = allocations
+        self.raw_solver_output = raw_solver_output
+
+    def __iter__(self):
+        """Enable backward-compatible unpacking: `allocations, res = optimizer.solve(...)`."""
+        yield self.allocations
+        yield self.raw_solver_output
+
+    @property
+    def converged(self) -> bool:
+        return bool(self.raw_solver_output.success)
+```
+
+---
+
+## 8. Explicit Domain Exceptions with Diagnostic Context
+
+Never leak raw `IndexError`, `KeyError`, or `ValueError` from computational libraries without translation. Wrap with actionable domain context:
+
+```python
+class OptimizationConvergenceError(RuntimeError):
+    """Raised when the optimization fails to reach feasibility within solver bounds."""
+
+    def __init__(self, message: str, iteration_count: int, last_residuals: dict[str, float]):
+        self.iteration_count = iteration_count
+        self.last_residuals = last_residuals
+        detailed_msg = (
+            f"{message} (Iterations: {iteration_count}, "
+            f"Worst Residuals: {last_residuals})"
+        )
+        super().__init__(detailed_msg)
+```
+
+---
+
+## Complete Reference Implementation
+
+Below is a self-contained, runnable architectural pattern demonstrating all core principles:
+
+```python
+"""Production clean architecture reference pattern."""
+from collections.abc import Callable, Sequence
+from dataclasses import dataclass
+from typing import Annotated, Any, Protocol, runtime_checkable
+import numpy as np
+from pydantic import BaseModel, ConfigDict, Field, InstanceOf
+from scipy.optimize import OptimizeResult, minimize
+
+# 1. Structural Protocol
+@runtime_checkable
+class ResponseFunction(Protocol):
+    def evaluate(self, spend: np.ndarray) -> tuple[float, np.ndarray]:
+        """Return (expected_return, gradient)."""
+        ...
+
+# 2. Result Envelope with Dual-Contract Compatibility
+@dataclass
+class AllocationResult:
+    optimal_spend: dict[str, float]
+    solver_result: OptimizeResult
+
+    def __iter__(self):
+        yield self.optimal_spend
+        yield self.solver_result
+
+    @property
+    def total_spend(self) -> float:
+        return sum(self.optimal_spend.values())
+
+    @property
+    def expected_utility(self) -> float:
+        return -float(self.solver_result.fun)
+
+# 3. Input Specification Fortress
+class SpendAllocationSpec(BaseModel):
+    model_config = ConfigDict(arbitrary_types_allowed=True, extra="forbid")
+
+    total_budget: Annotated[float, Field(gt=0.0)]
+    channels: Annotated[list[str], Field(min_length=1)]
+    min_spend_per_channel: Annotated[float, Field(ge=0.0)] = 0.0
+
+# 4. Domain Engine
+class ProductionAllocator:
+    def __init__(self, spec: SpendAllocationSpec, response_model: ResponseFunction):
+        self.spec = spec
+        self.response_model = response_model
+
+    def allocate(self) -> AllocationResult:
+        n_channels = len(self.spec.channels)
+        x0 = np.full(n_channels, self.spec.total_budget / n_channels)
+        bounds = [(self.spec.min_spend_per_channel, self.spec.total_budget) for _ in range(n_channels)]
+
+        # Objective: minimize negative return
+        def objective_and_grad(x: np.ndarray) -> tuple[float, np.ndarray]:
+            ret, grad = self.response_model.evaluate(x)
+            return -ret, -grad
+
+        # Budget equality constraint: sum(x) == total_budget
+        budget_constraint = {
+            "type": "eq",
+            "fun": lambda x, total=self.spec.total_budget: float(np.sum(x) - total),
+            "jac": lambda x: np.ones_like(x),
+        }
+
+        # Solve
+        res: OptimizeResult = minimize(
+            fun=lambda x: objective_and_grad(x)[0],
+            jac=lambda x: objective_and_grad(x)[1],
+            x0=x0,
+            method="SLSQP",
+            bounds=bounds,
+            constraints=[budget_constraint],
+        )
+
+        allocations = {
+            channel: float(res.x[i])
+            for i, channel in enumerate(self.spec.channels)
+        }
+        return AllocationResult(optimal_spend=allocations, solver_result=res)
+```
+
+---
+
+## Anti-Patterns & Rationalization Counters
+
+| Excuse / Rationalization | Reality & Architectural Invariant |
+|---|---|
+| *"Using raw numpy arrays is faster than xarray or named objects."* | Profiling shows coordinate indexing overhead is negligible compared to numerical solving. Coordinate mistakes cause silent data corruption across channels. |
+| *"Pydantic validation at model init is unnecessary overhead."* | Failing 20 minutes into an optimization run due to an invalid dimension shape wastes orders of magnitude more CPU and human time than initial validation. |
+| *"I don't need `typing.Protocol`, simple inheritance with ABC is fine."* | Rigorous subtyping through protocols enables frictionless testing with test doubles, zero cyclic imports, and eliminates brittle multi-level MRO bugs. |
+| *"Default parameter binding in lambdas looks weird."* | Without `fun=fun, scale=scale`, Python closures capture the loop reference lazily, creating catastrophic bugs where all constraints evaluate identically. |
+| *"Returning a tuple `(a, b)` is standard pythonic style."* | Returning tuples makes adding future fields (e.g. diagnostics, marginal prices) a breaking change for all downstream consumers. |
+
+---
+
+## Red Flags Checklist
+
+Before considering Python domain code ready for production, verify:
+- [ ] No `isinstance()` checks against concrete domain classes (use `typing.Protocol`).
+- [ ] No raw lambda functions inside loops without default argument binding (`lambda x, s=s: ...`).
+- [ ] No ambiguous mathematical signs: `.objective` (solver minimization) and `.utility` (business maximization) are explicitly defined.
+- [ ] No raw multi-dimensional arrays without semantic coordinate labels.
+- [ ] Numerical gradient/Jacobian solvers receive properly conditioned and scaled variables.
+- [ ] Public results support both property inspection and backward-compatible iteration.
+- [ ] Domain errors wrap external library exceptions with coordinate and parameter context.
+

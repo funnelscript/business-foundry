@@ -335,3 +335,11 @@ Rules become shared only after approval and publish.
 - All engineering failures and architectural mistakes must be codified into canonical 14-section dossiers in `Failure-lessons/<slug>.md`.
 - Every failure lesson must be indexed in [Failure-lessons/lessons-index.md](Failure-lessons/lessons-index.md) and referenced here.
 - "Pay for an engineering mistake once. After that, the project remembers it."
+
+<!-- gate0-preflight:start -->
+## Gate 0 Preflight & Engineering Invariants
+1. **The GitHub-First Remote Diff Invariant (GitHub >> Local >> GitHub):** Before modifying ANY file in a git repository with an upstream remote, the agent MUST NOT make blind local edits. Always verify remote status (`git fetch && git diff HEAD..@{u} -- <file>`) and reconcile (`git pull --rebase`) before modifying code to prevent clobbering remote work. Details in `Failure-lessons/remote-diff-guard.md`.
+2. **The Deterministic PreToolUse & High-Priority Placement Invariant:** Agent lifecycle hooks must enforce physical admission gates (`decision: deny` on PreToolUse) rather than passive advisory logging; critical behavioral invariants must reside within high-priority context to guarantee zero-truncation context ingestion. Details in `Failure-lessons/passive-hook-weakness.md`.
+3. **The Autonomous Capability & Tool Routing Invariant:** The user will NOT explicitly mention, tag, or @mention skills or MCP tools. The agent MUST autonomously infer the domain from user intent, execute auto-assigned specialist capabilities, and invoke native MCPs/CLIs directly before writing code. Details in `Failure-lessons/autonomous-routing-discipline.md`.
+4. **The Non-Interactive Automation Invariant:** All unattended scripts, git operations, and background tasks must execute with non-interactive flags (`--yes`, `-f`, `git branch -D`, or `input=''`) to prevent process deadlocks on standard input prompts. Details in `Failure-lessons/interactive-script-background-hang.md`.
+<!-- gate0-preflight:end -->

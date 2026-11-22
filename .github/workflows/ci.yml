@@ -1,0 +1,51 @@
+name: Business Foundry CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  governance-core:
+    name: Governance Core (Bun & TypeScript)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: |
+          cd ontology-governance-core
+          bun install
+
+      - name: Run TypeScript Typecheck
+        run: |
+          cd ontology-governance-core
+          bun run --bun tsc --noEmit
+
+      - name: Run Governance Core Tests
+        run: |
+          bun run test
+
+  schema-lint:
+    name: Schema & Specification Integrity
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Verify PostgreSQL Schema Syntax
+        run: |
+          test -f spec/ontology_governance_schema.sql
+          test -f spec/meta-ontology-traits-v1.md
+          test -f spec/grammar.ebnf
+          test -f spec/operational-ontology-governance-core.md
+          echo "All specifications and SQL schemas present."

@@ -1,0 +1,17 @@
+{
+  "name": "business-foundry",
+  "version": "1.0.0",
+  "description": "Business Foundry: Enterprise Operational Ontology, Governance & Decision Harness for FunnelScript",
+  "private": true,
+  "workspaces": [
+    "ontology-governance-core"
+  ],
+  "scripts": {
+    "test": "bun test ontology-governance-core/tests",
+    "start": "bun run --cwd ontology-governance-core start",
+    "typecheck": "bun x tsc --noEmit --project ontology-governance-core/tsconfig.json"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.3"
+  }
+}

@@ -1,38 +1,98 @@
-# Anti-Slop & Environment Hygiene Guardrails (Gate 0 Mandatory)
-*.pem
-*.key
-agent-kernel/env-vault/
-*worktrees/
-*.wave.*
-coordinator.*/
-*.pyc
-.DS_Store
+# ==============================================================================
+# FunnelScript Business Foundry - Git Ignore Rules
+# ==============================================================================
 
-# Environment & Secrets
+# Operating System Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Environment Variables, Secrets & Keys (Gate 0 Hard Enforcement)
 .env
 .env.*
-!.env.example
+*.env
 *.local
+!*.example
+!*.template
+*.pem
+*.key
+*.cert
+*.crt
+id_rsa*
+secrets/
+credentials/
+agent-kernel/env-vault/
 
-# Python
+# Python Caches, Virtual Environments & Build Artifacts
 __pycache__/
 *.py[cod]
 *$py.class
-.venv/
-env/
-venv/
 .pytest_cache/
 .ruff_cache/
 .hypothesis/
-
-# Node / Bun
-node_modules/
+.coverage
+.coverage.*
+htmlcov/
+build/
 dist/
-.turbo/
+wheels/
+*.egg-info/
+*.egg
+.venv/
+venv/
+env/
+ENV/
 
-# OS / Editor
-Thumbs.db
+# Node, TypeScript & Bun Artifacts
+node_modules/
+.bun/
+*.tsbuildinfo
+.turbo/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# IDEs, Code Editors & Tooling
 .vscode/*
 !.vscode/settings.json
 !.vscode/extensions.json
 .idea/
+*.swp
+*.swo
+*~
+
+# Agent Frameworks, Local Workspaces, Worktrees & Transient Caches
+/.agents/
+/.agents
+/plans/
+/plans
+.poteto/
+.pstack/
+.anti-slop/
+.claude-plugin/
+.codex-plugin/
+.gemini/
+*worktrees/
+worktrees/
+*.wave.*
+coordinator.*/
+scratch/
+*.tmp
+*.bak
+
+# Research Heavy Bundles, Clones & Dumps
+research/
+*.rea.json
+
+# Local Cross-Repo Development Symlinks (Sibling repo references)
+# Kept locally for monorepo development without creating dangling links in GitHub
+/examples
+/packages
+/schema
+/src
+/tests
