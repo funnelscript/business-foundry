@@ -1,0 +1,38 @@
+# Anti-Slop & Environment Hygiene Guardrails (Gate 0 Mandatory)
+*.pem
+*.key
+agent-kernel/env-vault/
+*worktrees/
+*.wave.*
+coordinator.*/
+*.pyc
+.DS_Store
+
+# Environment & Secrets
+.env
+.env.*
+!.env.example
+*.local
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+env/
+venv/
+.pytest_cache/
+.ruff_cache/
+.hypothesis/
+
+# Node / Bun
+node_modules/
+dist/
+.turbo/
+
+# OS / Editor
+Thumbs.db
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+.idea/

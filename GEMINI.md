@@ -1,0 +1,177 @@
+<!-- agent-kernel:start -->
+# Gemini CLI Agent Kernel Instructions
+
+Follow the shared Agent Kernel constitution at:
+
+/Users/mamdouhaboammar/.agent-kernel/dist/AGENTS.md
+
+Critical rules:
+
+- Inspect the repository structure, package manager, config files, and relevant source files before editing.
+- Never expose API keys, tokens, service-role keys, or private credentials in code, logs, UI, screenshots, generated docs, or commits.
+- For TypeScript CLI projects, prefer pnpm, tsup, Vitest, Commander-style command structure, and version 0.0.1 unless the repository already has a different standard.
+- In production Supabase apps, do not add local SQLite fallbacks, fake persistence, or dummy database layers unless the user explicitly asks for a local-only prototype.
+- Never use or install Colima. Always find and use an alternative when container or virtualization runtime is needed, due to its excessively large size and footprint.
+- Bun is mandatory for every JavaScript and TypeScript project. Every agent must use Bun first for dependency installation, script execution, package execution, workspace installation, lockfile generation, CI, Docker, and local development. npm and Yarn are prohibited. pnpm is permitted only as a controlled exception when documented in `.agent-kernel/package-manager-exception.json` with user-approved state and valid reason codes (verified_bun_failure or verified_monorepo_incompatibility).
+- Inspect and execute installed guard & workflow skills (test-guard, clean-code-guard, docs-guard, grill-me, agency skills) directly from local skill directories without reinstalling via npx if already present.
+- Use the Engineering division as a team and work in a loop until the requested feature is built and tested — functional, unit, integration, and a security pass — with every gate green, enforcing unslop-preflight quality standards and taste-skill aesthetic excellence.
+- Inspect and execute all project-specific skills in .agents/skills/ in every session alongside test-guard and clean-code-guard.
+- For PrePilot Agency Suite: PUBLIC_BASE_URL must be https://api.prepilot-system-agency.space. Human browser visits to GET / with Accept: text/html redirect to app.prepilot-system-agency.space, but API, MCP (/mcp), OAuth (/oauth/*), and .well-known/* calls must NEVER be redirected. resolve_oauth_client MUST retain support for legacy client_id patterns (prepilot-agency-suite-client-*) and validate redirect URIs against ALLOWED_REDIRECT_HOSTS and loopback ports because external AI clients (ChatGPT, Claude, etc.) cache registration client IDs across user sessions.
+- For PrePilot Agency Suite: Primary Supabase project is 'PrePilot' (ref: tbiolxxczdeqtjlvtlkt). In /oauth/authorize, when ENFORCE_LICENSE=True, user authentication MUST check email+password against Supabase Auth/DB (or master SECRET_CODE for owner). NEVER bypass Supabase DB authentication, swallow DB errors silently, or shortcut password checks to assign owner status without user_id, as valid user_id binding is required for AI client sessions and license credit tracking.
+- Mandatory Service Account Email Registry: When configuring, inspecting, or linking project environment variables (`.env`, `env-vault`) or third-party service credentials (such as Supabase, Cloudflare, Stripe, Resend, GCP, AWS, GitHub, OpenAI, Anthropic, Vercel, Neon, Sentry, etc.), the agent MUST MANDATORILY ask the user which email address (e.g. Gmail / primary account) is associated with each service and record it into Env Vault (`agent-kernel env set-account <service> <email>`). The agent must NEVER guess or assume account emails.
+- All coding sessions in Antigravity must automatically follow the Compound Engineering loop (80% planning & review via ce-brainstorm / ce-plan / ce-code-review / ce-compound, 20% execution via ce-work / ce-simplify-code / lfg, and root-cause debugging via ce-debug) from the start of every session, codifying learnings into docs/solutions/.
+- In Antigravity App sessions, the Antigravity Omni-Agentic Superplatform (AOS) is mandatory: enforce the Compound Engineering 80/20 loop, Fable Circuit Breaker (halt speculative edits if failure_streak >= 2), AST Telepathy blast-radius checks before interface edits, 3-Pass Verification (Unit, Integration, AppSec/Taste), and durable codification to docs/solutions/.
+- Verified requirement: <verified card>
+- Verified card: <verified card>
+- Quality Gate & Push Policy: no-mistakes (https://github.com/kunchenguid/no-mistakes) is the mandatory default quality gate and Git push pipeline across all projects. Whenever completing code changes, validating work, or preparing to push or open PRs, all agents must default to using /no-mistakes or 'git push no-mistakes' (or 'no-mistakes axi run') to ensure rebase, automated AI review, testing, linting, and docs are green before remote push.
+- Never optimize raw monetary variables in numerical gradient solvers; optimize over normalized unit simplexes (w in [0, 1]) with scale-invariant finite-difference steps.
+- Decision endpoints representing the same economic model must share one canonical response-evaluation path that respects normalized target scaling.
+- Model lineage checks must fail closed: entity ID overlap does not constitute a modeling cohort; dataset fingerprint, currency, and population hashes must match.
+- Never expose a model or async job as completed before physical artifact publication, checksum verification, and registry indexation are committed.
+- Asynchronous job transitional states must never become indefinite durable states; late worker completions must be fenced if a job was cancelled.
+- One domain invariant must have one canonical validation implementation; asynchronous job submission must enforce preflight admission gates before enqueuing.
+- In hierarchical and panel models, never present prior-dominated posterior estimates as empirical evidence; always classify and expose empirical spend support metadata.
+- Caller input errors must never be classified as INTERNAL errors; domain exceptions must map to machine-readable error codes with actionable remediation.
+- Machine-actionable next_actions must originate from the actual registered capability catalog, not free-form text.
+- A regression test is not proven useful until shown to fail when the fix is removed; green tests do not equal verified requirements without red-green falsification.
+- User correction: push git no mistakes
+- Verified card: implement ADR 0007 transport boundaries and proto schemas
+- Verified card: implement gRPC worker server, client adapter, and CLI command
+- Verified card: implement fable-architecture core evaluation engine & deterministic scoring algorithm
+- Verified card: create complete skills/fable-architecture/ skill package with schema v2
+- Verified card: integrate fable-architecture into registry, task router, hook dispatch, and regenerate catalogs
+- Verified card: verify architecture enforcement test suite and system doctor
+- Verified card: <verified card>
+- User correction: push git no mistakes
+- User correction: update fable learnining system to apply the following pattern  "# Mission: Convert This Session Into Durable Project Learnings This session contains engineering knowledge that should not disappear
+- User correction: update fable learnining system to apply the following pattern  "# Mission: Convert This Session Into Durable Project Learnings This session contains engineering knowledge that should not disappear
+- User correction: Push directly to github as new pr without no mistakes
+- User correction: Push directly to github as new pr without no mistakes
+- User correction: use ur skills and tools  to  You are working on: [https://github.com/imMamdouhaboammar/get-fable](https://github.com/imMamdouhaboammar/get-fable) MISSION Take ownership of the 10 highest-priority open
+- User correction: use ur skills and tools  to  You are working on: [https://github.com/imMamdouhaboammar/get-fable](https://github.com/imMamdouhaboammar/get-fable) MISSION Take ownership of the 10 highest-priority open
+- In Teola, public form rate limiters must extract client IP via extractClientIp in lib/security/client-ip.ts (prioritizing cf-connecting-ip and x-real-ip before x-forwarded-for), fail closed on RPC error, and gate diagnostic error endpoints like sentry-example-api to 404 in production.
+- In headless browser automation, secondary settings with benign defaults must never fail-closed and abort publishing workflows; log warnings and continue.
+- In iframe-embedded web automation, evaluate post-submission affirmative outcomes across both the child frame and the top-level window context.
+- Optional native GUI or platform-specific libraries must never be imported at module top-level; guard with try/except ImportError to keep headless CI and containers green.
+- Before evaluating whether a code fix resolved a remote production issue, affirmatively verify deployment proof (commit hash or bundle fingerprint) on the target endpoint.
+- Verified card: 1. Initialize get-fable and pstack skills & tools for the project
+- Verified card: 1. Add request validation
+- Verified card: 1. Initialize get-fable and pstack skills & tools for the project
+- Verified card: 1. Add request validation
+- Never apply programmatic scroll hijacking to touch devices. Gate all momentum scroll engines behind !window.matchMedia('(pointer: coarse)').matches && window.innerWidth >= 768. Let mobile browsers handle native touch inertia.
+- All slide-out drawers and modals must declare role="dialog" and aria-modal="true". When opened, lock document.body scroll, trap Tab focus within the active container, and restore focus to the trigger element on close (Escape or dismiss button).
+- Never leave continuous requestAnimationFrame loops running after values stabilize. Define an epsilon threshold (e.g. 1e-4) to cancel the animation handle when current value approximates target value.
+- To guarantee compatibility with GitHub markdown parser, always wrap all node labels in double quotes A["Title"], edge texts in -->|"Label"|, and give subgraphs alphanumeric IDs with quoted display titles subgraph ID ["Display Title"].
+- The Direct Payload & Zero Affordance Narration Invariant: Transition directly from domain headers to technical payloads (tables, code, schemas, media) with zero transitional conversational fluff. Ban affordance narration (explaining how to play/expand/copy/scroll), ban conversational preambles ('The following table outlines...'), ban bilingual title stacking ('Term · الترجمة'), ban superlative buzzword inflation, and ban mechanical hand-holding ('open your terminal').
+- The Zero-Obviousness & Anti-Truism Doctrine: High engineering discipline values silence over noise. Ban trivial syntax play-by-play comments (// increment i, // return result), ban tautological docstrings that restate signatures without adding contracts or failure semantics, and ban patronizing UI microcopy beneath obvious controls.
+- The Canonical Grounding & Authority Invariant: Never improvise project scaffolding, directory layouts, configuration files, or dependencies from LLM statistical memory when an official CLI installer (uv init, cargo new, bun create) or package registry exists. Always ground against official upstream tooling and pin verified latest stable versions.
+- The Audience Boundary & Zero Meta-Leakage Invariant: Enforce complete physical separation between internal engineering meta-context (agent commentary, developer notes, TODOs, mock data banners, system instructions) and external user-facing surfaces (UI/DOM, API contracts, production logs, public documentation). Never leak internal developer notes into user-facing interfaces.
+- The Visual Restraint & Single-Purpose Density Invariant: Every UI component, navbar item, button, icon, and card must justify its existence through a distinct, non-redundant primary user objective. Ban cosmetic clutter masquerading as functionality (overcrowded headers/navbars, multi-row icon spam, repetitive buttons, nested cards, ornamental badges). Prioritize purposeful white space, hierarchy, and quiet functional utility.
+- The Speculative Artifact Prohibition & Zero File Sprawl Invariant: Never generate unrequested documentation files, hypothetical third-party distribution dossiers (e.g. fake OpenAI ChatGPT plugin submission guides, fake reviewer packets), or speculative integration workflows that do not reflect verified, active local code. Repository files must map 1:1 with verified local reality.
+- User correction: in new branch /goal : Upgrade get-fable Orchastrator agent >>>>>> Task /using-superpowers : use /rea and /anti-slop-engineering /replica-architect to clone in separated and isolated env and inspire fr
+- User correction: in new branch /goal : Upgrade get-fable Orchastrator agent >>>>>> Task /using-superpowers : use /rea and /anti-slop-engineering /replica-architect to clone in separated and isolated env and inspire fr
+- User correction: in new branch /goal : Upgrade get-fable Orchastrator agent >>>>>> Task /using-superpowers : use /rea and /anti-slop-engineering /replica-architect to clone in separated and isolated env and inspire fr
+- User correction: in new branch /goal : Upgrade get-fable Orchastrator agent >>>>>> Task /using-superpowers : use /rea and /anti-slop-engineering /replica-architect to clone in separated and isolated env and inspire fr
+- In agent frameworks and skill ecosystems, framework-internal maintainer tools must never be distributed to consumer repositories by default; capability registries must declare explicit audience discrimination (audience: consumer | maintainer) and default installations must include only consumer-facing capabilities.
+- In autonomous agent harnesses, universal testing skills must provide stack-agnostic testing methodology (TDD, edge cases, anti-mocking, flaky test recovery) for consumer repositories, while internal test runners must be strictly isolated to maintainer workflows.
+- Multi-host platform parity validators must evaluate target client installations against consumer capability subsets (consumerSkillIds()), reserving full canonical verification (canonicalSkillIds()) strictly for source monorepo self-diagnostics.
+- Verified card: implement ADR 0007 transport boundaries and proto schemas
+- Verified card: implement gRPC worker server, client adapter, and CLI command
+- Verified card: implement fable-architecture core evaluation engine & deterministic scoring algorithm
+- Verified card: create complete skills/fable-architecture/ skill package with schema v2
+- Verified card: integrate fable-architecture into registry, task router, hook dispatch, and regenerate catalogs
+- Verified card: verify architecture enforcement test suite and system doctor
+- Verified card: REA study of kyegomez/OpenMythos and Fable Mythos Recurrent-Depth & MoE/MoDA/ACT Engine upgrade
+- Verified card: implement Phase 1 Rust Engines (Lifecycle Hook Dispatcher, Single-Pass RegexSet Router + ArchEval + Spark, Zero-Copy TOON + Reflex Compaction)
+- Verified card: integrate all 42 skills across registry/agents.json, registry/recipes.json, registry/hooks.json, neural graph transitions, and hooks/fable_profile_inject.py
+- Verified card: expand Jev Reflex SKILL_BOUNDARY_CONTRASTS, OpenMythos MoE FABLE_MYTHOS_EXPERT_CATALOG, Spark rules, and TS-Rust orchestrator bridge to all 42 skills
+- Verified card: implement crates/fable-jev Rust Jev Subagent Task-Distribution and Skill-Arming Engine and wire jev-orchestrate CLI subcommand into crates/fable-cli
+- Verified card: implement TypeSafe Jev API .env installer tool prompting for TYPESAFE_API_KEY during get-fable install, init, setup-jev, and reflex setup
+- Verified card: upgrade all 15 remaining M3 skills with executable action-contract scenarios and capture evals/results/agent-behavior-v1.json so 42/42 skills reach M4
+- Verified card: wire live gRPC Worker wave execution (executeDelegationWavePlanWithGrpc) into src/core/orchestrator/index.ts and jev-orchestrate
+- Verified card: auto-install get-fable skills via npx skills add <owner/repo> on npm install (postinstall)
+- Verified card: Phase 4: Integrate fable-neural-test into fable-rig native agent tools and CLI bridge with full verification
+- Verified card: <verified card>
+- Verified card: implement ADR 0007 transport boundaries and proto schemas
+- Verified card: implement gRPC worker server, client adapter, and CLI command
+- Verified card: implement fable-architecture core evaluation engine & deterministic scoring algorithm
+- Verified card: create complete skills/fable-architecture/ skill package with schema v2
+- Verified card: integrate fable-architecture into registry, task router, hook dispatch, and regenerate catalogs
+- Verified card: verify architecture enforcement test suite and system doctor
+- Verified card: REA study of kyegomez/OpenMythos and Fable Mythos Recurrent-Depth & MoE/MoDA/ACT Engine upgrade
+- Verified card: implement Phase 1 Rust Engines (Lifecycle Hook Dispatcher, Single-Pass RegexSet Router + ArchEval + Spark, Zero-Copy TOON + Reflex Compaction)
+- Verified card: integrate all 42 skills across registry/agents.json, registry/recipes.json, registry/hooks.json, neural graph transitions, and hooks/fable_profile_inject.py
+- Verified card: expand Jev Reflex SKILL_BOUNDARY_CONTRASTS, OpenMythos MoE FABLE_MYTHOS_EXPERT_CATALOG, Spark rules, and TS-Rust orchestrator bridge to all 42 skills
+- Verified card: implement crates/fable-jev Rust Jev Subagent Task-Distribution and Skill-Arming Engine and wire jev-orchestrate CLI subcommand into crates/fable-cli
+- Verified card: implement TypeSafe Jev API .env installer tool prompting for TYPESAFE_API_KEY during get-fable install, init, setup-jev, and reflex setup
+- Verified card: upgrade all 15 remaining M3 skills with executable action-contract scenarios and capture evals/results/agent-behavior-v1.json so 42/42 skills reach M4
+- Verified card: wire live gRPC Worker wave execution (executeDelegationWavePlanWithGrpc) into src/core/orchestrator/index.ts and jev-orchestrate
+- Verified card: auto-install get-fable skills via npx skills add <owner/repo> on npm install (postinstall)
+- Verified card: Phase 4: Integrate fable-neural-test into fable-rig native agent tools and CLI bridge with full verification
+- Verified card: <verified card>
+- Verified card: implement ADR 0007 transport boundaries and proto schemas
+- Verified card: implement gRPC worker server, client adapter, and CLI command
+- Verified card: implement fable-architecture core evaluation engine & deterministic scoring algorithm
+- Verified card: create complete skills/fable-architecture/ skill package with schema v2
+- Verified card: integrate fable-architecture into registry, task router, hook dispatch, and regenerate catalogs
+- Verified card: verify architecture enforcement test suite and system doctor
+- Verified card: REA study of kyegomez/OpenMythos and Fable Mythos Recurrent-Depth & MoE/MoDA/ACT Engine upgrade
+- Verified card: implement Phase 1 Rust Engines (Lifecycle Hook Dispatcher, Single-Pass RegexSet Router + ArchEval + Spark, Zero-Copy TOON + Reflex Compaction)
+- Verified card: integrate all 42 skills across registry/agents.json, registry/recipes.json, registry/hooks.json, neural graph transitions, and hooks/fable_profile_inject.py
+- Verified card: expand Jev Reflex SKILL_BOUNDARY_CONTRASTS, OpenMythos MoE FABLE_MYTHOS_EXPERT_CATALOG, Spark rules, and TS-Rust orchestrator bridge to all 42 skills
+- Verified card: implement crates/fable-jev Rust Jev Subagent Task-Distribution and Skill-Arming Engine and wire jev-orchestrate CLI subcommand into crates/fable-cli
+- Verified card: implement TypeSafe Jev API .env installer tool prompting for TYPESAFE_API_KEY during get-fable install, init, setup-jev, and reflex setup
+- Verified card: upgrade all 15 remaining M3 skills with executable action-contract scenarios and capture evals/results/agent-behavior-v1.json so 42/42 skills reach M4
+- Verified card: wire live gRPC Worker wave execution (executeDelegationWavePlanWithGrpc) into src/core/orchestrator/index.ts and jev-orchestrate
+- Verified card: auto-install get-fable skills via npx skills add <owner/repo> on npm install (postinstall)
+- Verified card: Phase 4: Integrate fable-neural-test into fable-rig native agent tools and CLI bridge with full verification
+- Verified card: <verified card>
+- Public distribution repos must contain strictly N SKILL.md files matching the canonical registry count (44); internal sub-reflexes and plugins must never use SKILL.md to prevent external crawler bloat.
+- Binary entrypoints (main.rs, cli.ts) must strictly remain under 1,000 lines; subsystems, framework adapters (Rig), and async runtimes must be modularized into dedicated submodule files.
+- Agent lifecycle hooks and ambient diagnostic scripts must route all human-facing banners to stderr, never stdout, to prevent stream pollution during shell redirection.
+- Durable lifecycle state machines permit completion ONLY from verifying phase; direct transitions from executing to complete are prohibited.
+- Never derive Deserialize on static slice references in embedded ledgers; restrict compile-time registries to Serialize.
+- In clap v4, all formatting flags accepted after subcommands must declare #[arg(global = true)].
+- The Physical Deliverable Invariant: Every autonomous agent cycle or tier execution that claims progress MUST produce or verify a tangible on-disk or git artifact (incident dossier, PR review, issue spec, hygiene audit, or source/test code). Pure mock transitions without deliverables are prohibited.
+- Any integration test invoking runDoctor() or full system diagnostics must declare timeout: 30000.
+- The Dual-Resolution Build Invariant: Whenever engine source files under src/ or proto/ are modified, the precompiled bundle in dist/ must be rebuilt via bun run build before executing test commands or launching agent loops.
+- Never assert brittle literal counts on growing dynamic catalogs in text assertions; assert canonical tokens.
+- The Incident-Aware Triage Invariant: Blocker suppression and diagnostic outcomes must be durable across process restarts by indexing on-disk incident artifacts (.fable/incidents/). Re-probing known external blockers across process boundaries is prohibited.
+- The Network Integration Timeout Invariant: Any test exercising subprocesses with live network egress (gh, git, external APIs) must specify an explicit timeout threshold of at least 15,000ms or decouple via a mock transport layer to prevent latency flakiness.
+- Never treat a package publish exit code of 0 as proof of publication; affirmatively verify deployment proof against the registry endpoint (curl -sf https://registry.npmjs.org/<pkg>/<version>). For 2FA accounts, enforce Granular Access Tokens or explicit OTP.
+- Integration tests evaluating repository linters or lifecycle engines must never execute against process.cwd() of active development; always use hermetic temporary workspaces.
+- Deep repository diagnostics, multi-check doctor audits, and git worktree integration tests must declare explicit timeouts of at least 60,000ms to remain stable under full-suite monorepo concurrency.
+- Always verify dependency link integrity via bun install before running release packaging or full test suites to prevent dangling hoisted symlinks.
+- Decouple distribution packaging (prepack) from full monorepo test suites; verify the test pyramid in dedicated quality gates before packaging.
+- The Atomic Watchdog Lease Invariant: Autonomous watchdog supervisor telemetry must synchronize agent heartbeat state to an atomic, non-locking filesystem lease (.fable/watchdog-heartbeat.json) containing monotonic cycle counts and timestamps, avoiding in-memory state loss across process boundaries.
+- Never write an empty catch block ('} catch {}') in tests or resilience fallbacks. Negative tests must explicitly assert error properties; operational handlers must log structured diagnostic warnings preserving error context.
+- Sub-engines and internal packages must import shared domain contracts directly from src/core/types.ts (e.g. FablePhase, not LifecyclePhase) to prevent type drift at build boundaries.
+- Substantial tasks cannot terminate or mark complete with verifiedGeneration < mutationGeneration. Always run test/build/lint validation and record fresh passing evidence after the final workspace mutation.
+- Release packaging and publishing must invoke explicit absolute binary paths (/usr/local/bin/npm or command npm) rather than unpinned shell aliases or auto-correcting wrappers that divert execution.
+- Public distribution manifests (package.json, marketplaces, npm) must point strictly to public open-source repository URLs (imMamdouhaboammar/get-fable). Branch updates in automated hook environments must use ref pointers (git branch -f) to prevent dirty state collisions.
+- Verified card: implement ADR 0007 transport boundaries and proto schemas
+- Verified card: implement gRPC worker server, client adapter, and CLI command
+- Verified card: implement fable-architecture core evaluation engine & deterministic scoring algorithm
+- Verified card: create complete skills/fable-architecture/ skill package with schema v2
+- Verified card: integrate fable-architecture into registry, task router, hook dispatch, and regenerate catalogs
+- Verified card: verify architecture enforcement test suite and system doctor
+- Verified card: REA study of kyegomez/OpenMythos and Fable Mythos Recurrent-Depth & MoE/MoDA/ACT Engine upgrade
+- Verified card: implement Phase 1 Rust Engines (Lifecycle Hook Dispatcher, Single-Pass RegexSet Router + ArchEval + Spark, Zero-Copy TOON + Reflex Compaction)
+- Verified card: integrate all 42 skills across registry/agents.json, registry/recipes.json, registry/hooks.json, neural graph transitions, and hooks/fable_profile_inject.py
+- Verified card: expand Jev Reflex SKILL_BOUNDARY_CONTRASTS, OpenMythos MoE FABLE_MYTHOS_EXPERT_CATALOG, Spark rules, and TS-Rust orchestrator bridge to all 42 skills
+- Verified card: implement crates/fable-jev Rust Jev Subagent Task-Distribution and Skill-Arming Engine and wire jev-orchestrate CLI subcommand into crates/fable-cli
+- Verified card: implement TypeSafe Jev API .env installer tool prompting for TYPESAFE_API_KEY during get-fable install, init, setup-jev, and reflex setup
+- Verified card: upgrade all 15 remaining M3 skills with executable action-contract scenarios and capture evals/results/agent-behavior-v1.json so 42/42 skills reach M4
+- Verified card: wire live gRPC Worker wave execution (executeDelegationWavePlanWithGrpc) into src/core/orchestrator/index.ts and jev-orchestrate
+- Verified card: auto-install get-fable skills via npx skills add <owner/repo> on npm install (postinstall)
+- Verified card: Phase 4: Integrate fable-neural-test into fable-rig native agent tools and CLI bridge with full verification
+- Verified card: <verified card>
+- The Post-Condition Verification and Canonical Binary Invariant: Destructive filesystem operations must use canonical absolute paths (/bin/rm) and assert physical absence ([ ! -e "$target" ]) before declaring completion. Speculative OS-level rationalizations when tool logs show execution errors are strictly banned.
+- Never run static security audits or packaging without first running compiler cleanup (e.g. cargo clean). Temporary build artifacts trigger false-positive supply chain violations.
+- Hybrid multi-language agent packages must distribute strictly from a clean dist/ bundle via build scripts and prepublish hooks, excluding all evals, tests, cases, and CI workflows from npm packages.
+- Never document curl script piping or literal agent configuration paths in public markdown; use standard package managers (npm, bun, npx skills add) and semantic target labels.
+- Respect npm HTTP 202 Accepted as successful staging entry; allow 60-120s for asynchronous worker processing before querying metadata or tags, and never retry publishing over a staged version.
+- The Elephant-Goldfish Model (EGM) and Mandatory Engineering Suite are the mandatory default operating model across all projects and sessions: Design with an elephant (deep context, egm-brainstorm, egm-draft, egm-bootstrap, egm-resolve) and Review with a goldfish (stateless, fresh-context subagent reviews via invoke_subagent across the 5 canonical stages: egm-zoom-out, egm-comprehension, egm-design, egm-implementation-readiness), enforcing artifact-first delivery to disk and resolving all architectural trade-offs before code modification. Additionally, every session MUST strictly adhere to the mandatory suite: /anti-slop-engineering (latest), /Poteto Mode (latest), /setup-pstack (latest), /get-fable (latest), /get-things-done (latest), /openreview, /deep-digger, /clean-code-guard, and /ponytail (latest).
+- User correction: Role: You are a Principal Systems & Code Quality Engineer enforcing strict defensive engineering, zero-trust invariants, and SRE principles. Your task is to fix the identified issues in the codebase
+- User correction: Role: You are a Principal Systems & Code Quality Engineer enforcing strict defensive engineering, zero-trust invariants, and SRE principles. Your task is to fix the identified issues in the codebase
+<!-- agent-kernel:end -->
