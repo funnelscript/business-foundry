@@ -91,6 +91,8 @@ research/
 
 # Local Cross-Repo Development Symlinks (Sibling repo references)
 # Kept locally for monorepo development without creating dangling links in GitHub
+/assets
+/docs/brand
 /examples
 /packages
 /schema

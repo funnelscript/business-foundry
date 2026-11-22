@@ -1,0 +1,11 @@
+{
+  "files.associations": {
+    "*.fnls": "funnelscript"
+  },
+  "material-icon-theme.files.associations": {
+    "*.fnls": "funnelscript"
+  },
+  "material-icon-theme.customIconPaths": {
+    "funnelscript": "editors/vscode/icons/funnelscript-color.svg"
+  }
+}
