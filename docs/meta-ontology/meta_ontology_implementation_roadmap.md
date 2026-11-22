@@ -53,7 +53,7 @@ Phase 0 (Freeze Spec)
     * Minimal Commerce Interfaces: `Offer`, `CustomerCohort`, `Channel`, `Order`, `Settlement`.
   * Keep the package strictly interface-only (zero industry-specific formulas or hardcoded assumptions).
 * **Why Fourth:** Community packages need a single, stable vocabulary to interoperate. Building this right after the Trait checker proves the Trait system works across `fpm` package boundaries.
-* **Target Files:** `packages/core/commerce_traits/fpm.toml`, `packages/core/commerce_traits/index.fnl`, `tests/test_core_commerce_traits.py`.
+* **Target Files:** `packages/core/commerce_traits/fpm.toml`, `packages/core/commerce_traits/index.fnls`, `tests/test_core_commerce_traits.py`.
 
 ### Phase 4: Declarative Data-to-Object Mapping Layer (`Ingestable` Trait)
 * **What to Do:**
@@ -66,9 +66,9 @@ Phase 0 (Freeze Spec)
 ### Phase 5: Flagship Package Migration & Multi-Package Composition Proof
 * **What to Do:**
   * Refactor `ecommerce/d2c_scale` and `leadgen/sales_capacity` to declare their domain objects (`CODParcel`, `SalesLead`, `SalesRepDesk`) using `entity ... implements core/commerce_traits.*`.
-  * Build a **Cross-Package Composition Example** (`examples/holistic_8ps_composition.fnl`) that imports two independent packages simultaneously—proving they share a single `LedgerAccount`, `CustomerCohort`, and `CapacityGuard` with zero glue code.
+  * Build a **Cross-Package Composition Example** (`examples/holistic_8ps_composition.fnls`) that imports two independent packages simultaneously—proving they share a single `LedgerAccount`, `CustomerCohort`, and `CapacityGuard` with zero glue code.
 * **Why Last:** Real-world packages stress-test every assumption in Phases 1–4. If writing `d2c_scale` and `sales_capacity` feels verbose or awkward, refine the Trait ergonomics *before* opening `fpm` to external contributors.
-* **Target Files:** `packages/ecommerce/d2c_scale/`, `packages/leadgen/sales_capacity/`, `examples/holistic_8ps_composition.fnl`.
+* **Target Files:** `packages/ecommerce/d2c_scale/`, `packages/leadgen/sales_capacity/`, `examples/holistic_8ps_composition.fnls`.
 
 ---
 

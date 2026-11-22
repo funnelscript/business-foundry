@@ -49,7 +49,7 @@
 3. **Breaking Trait Versions in `fpm`:**
    * *Risk:* Updating `core/commerce_traits` from `0.1.0` to `0.2.0` breaks half the community packages.
    * *Guardrail:* Treat `core/commerce_traits` as strictly SemVer-locked. Adding optional fields with defaults is a minor bump; changing or removing any required Trait member is a major breaking version.
-4. **Over-Complicating `.fnl` Syntax for Non-Developers:**
+4. **Over-Complicating `.fnls` Syntax for Non-Developers:**
    * *Risk:* Exposing heavy Rust-like generic syntax (`entity Foo<T: FinancialBinding + 'static>`) scares away growth engineers and strategists.
    * *Guardrail:* Keep Trait syntax clean, flat, and declarative (`entity CODParcel implements FinancialBinding, TimeDelayed`). Hide advanced plumbing inside `fpm` packages so end-users consuming a strategy only configure clean, readable parameters.
 

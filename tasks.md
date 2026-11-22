@@ -65,9 +65,9 @@ From our reverse-engineering analysis of `gura105/operational-ontology` (57.5 MB
 | **Phase 0** | Grammar & Contract Specification Freeze | **VERIFIED** | `spec/meta-ontology-traits-v1.md`<br>`spec/grammar.ebnf` | 800/800 | Spec Drift Clean |
 | **Phase 1** | Kernel Primitives & Lowering Pass (`Compiler -> Runtime`) | **VERIFIED** | `tokens.py`<br>`world_ast.py`<br>`parser.py`<br>`ledger.py`<br>`lowering.py`<br>`formatter.py`<br>`cli.py (fmt)`<br>`test_lowering_equivalence.py` | 805/805 | **Gate G2: PASSED** |
 | **Phase 2** | Static Trait Resolution & Dimensional Verification (`linter.py`) | **VERIFIED** | `compiler/linter.py`<br>`compiler/dimensions.py`<br>`compiler/diagnostics.py`<br>`tests/fixtures/meta-ontology/`<br>`tests/test_trait_conformance.py` | 821/821 | **Gate G1: PASSED** |
-| **Phase 3** | Official Standard Trait Package (`core/commerce_traits`) | **VERIFIED** | `packages/core/commerce_traits/fpm.toml`<br>`index.fnl`<br>`README.md`<br>`tests/test_core_commerce_traits.py` | 828/828 | **Gate G4 (Partial)** |
+| **Phase 3** | Official Standard Trait Package (`core/commerce_traits`) | **VERIFIED** | `packages/core/commerce_traits/fpm.toml`<br>`index.fnls`<br>`README.md`<br>`tests/test_core_commerce_traits.py` | 828/828 | **Gate G4 (Partial)** |
 | **Phase 4** | Declarative Data-to-Object Mapping Layer (`Ingestable`) | **VERIFIED** | `connectors/object_mapper.py`<br>`cli.py (funnelscript map inspect)`<br>`tests/test_object_mapper.py` | 834/834 | **Gate G5: PASSED** |
-| **Phase 5** | Flagship Migration, Conservation Fuzzing & Performance | **VERIFIED** | `packages/ecommerce/d2c_scale/`<br>`examples/holistic_8ps_composition.fnl`<br>`tests/test_cross_package_interop.py`<br>`tests/verification/test_meta_ontology_invariants.py`<br>`scripts/benchmark_meta_ontology.py` | 844/844 | **Gates G3, G4, G6: PASSED** |
+| **Phase 5** | Flagship Migration, Conservation Fuzzing & Performance | **VERIFIED** | `packages/ecommerce/d2c_scale/`<br>`examples/holistic_8ps_composition.fnls`<br>`tests/test_cross_package_interop.py`<br>`tests/verification/test_meta_ontology_invariants.py`<br>`scripts/benchmark_meta_ontology.py` | 844/844 | **Gates G3, G4, G6: PASSED** |
 
 ---
 
@@ -167,18 +167,18 @@ From our reverse-engineering analysis of `gura105/operational-ontology` (57.5 MB
   - Created directory `packages/core/commerce_traits/`.
   - Authored `packages/core/commerce_traits/fpm.toml` specifying version `0.1.0`, MIT license, description, and exports.
   - Authored `packages/core/commerce_traits/README.md` with complete documentation.
-- [x] **Task 3.2: Universal Behavioral Traits (`index.fnl`):**
+- [x] **Task 3.2: Universal Behavioral Traits (`index.fnls`):**
   - Defined `trait FinancialBinding`: `currency`, `clearing_account`, `on_settlement`.
   - Defined `trait Capacitated`: `capacity_limit`, `on_bottleneck`.
   - Defined `trait TimeDelayed`: `transit_delay`, `on_delay_elapsed`.
   - Defined `trait Attributable`: `channel_id`, `touchpoint_id`, `on_touchpoint`.
   - Defined `trait Ingestable`: `mapping_schema`, `idempotency_key`, `on_ingest`.
-- [x] **Task 3.3: Minimal Commerce Protocols (`index.fnl`):**
+- [x] **Task 3.3: Minimal Commerce Protocols (`index.fnls`):**
   - Defined shared contracts: `Offer`, `CustomerCohort`, `Channel`, `Order`, `Settlement`.
   - Strictly enforced interface-only rule: zero hardcoded industry formulas or channel assumptions.
 - [x] **Task 3.4: Package Verification Suite:**
   - Implemented `tests/test_core_commerce_traits.py`:
-    - Package resolution via `fpm.toml` and `index.fnl`.
+    - Package resolution via `fpm.toml` and `index.fnls`.
     - Linter conformance and clean AST validation across namespace (`as std`) and named (`{ ... }`) imports.
     - Verified negative trait conformance against standard traits (`FNL-O301`).
     - Verified zero-reflection lowering and deterministic DEVS execution in `WorldExecutor`.
@@ -221,7 +221,7 @@ From our reverse-engineering analysis of `gura105/operational-ontology` (57.5 MB
   - Refactored `packages/leadgen/sales_capacity/` to declare `SalesLead` and `SalesRepDesk` implementing `core/commerce_traits` (`FinancialBinding`, `Attributable`, `Ingestable`, `Capacitated`).
   - Guaranteed 100% backward compatibility: all 59 existing package module tests pass.
 - [x] **Task 5.2: Holistic Cross-Package Composition Proof:**
-  - Created `examples/holistic_8ps_composition.fnl` importing both `d2c_scale` and `sales_capacity`.
+  - Created `examples/holistic_8ps_composition.fnls` importing both `d2c_scale` and `sales_capacity`.
   - Authored `tests/test_cross_package_interop.py` (**Suite 3 / Gate G4: PASSED**):
     - Verified 2 independent packages share a single `LedgerAccount` and `CustomerCohort` with zero glue code.
     - Verified balanced ledger across cross-package transactions ($\sum \text{Debits} - \sum \text{Credits} = 0$).
@@ -269,7 +269,7 @@ uv run pytest -n auto
 uv run pytest tests/verification/test_lowering_equivalence.py -vv
 
 # Format FunnelScript files idempotently
-uv run funnelscript fmt <file.fnl>
+uv run funnelscript fmt <file.fnls>
 
 # Code quality and linting checks
 uv run ruff check src/ tests/

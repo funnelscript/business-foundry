@@ -44,11 +44,11 @@ No new research sections or runtime features may be written until the paradigm g
 
 ## 4. Real-World Data Ingestion & Calibration Rules
 
-Synthetic, hand-written scenarios (e.g., `examples/black_friday_2026.fnl`) are no longer accepted as proof of product maturity.
+Synthetic, hand-written scenarios (e.g., `examples/black_friday_2026.fnls`) are no longer accepted as proof of product maturity.
 
 * **Build Ingestion Adapters:** Implement a data ingestion module inside `src/funnelscript/stdlib/marketing/` capable of parsing standard CSV exports from real ad platforms (Meta Ads, Google Ads) and payment/CRM logs.
 * **Automated Parameter Inference:** The ingestion pipeline must infer core empirical parameters—such as diminishing returns/saturation, drop-off rates, and conversion latency—directly from historical campaign metrics.
-* **Code Generation:** The calibration step must output a valid, human-readable `.fnl` file representing the real campaign's baseline state, ready for scenario stress-testing.
+* **Code Generation:** The calibration step must output a valid, human-readable `.fnls` file representing the real campaign's baseline state, ready for scenario stress-testing.
 
 ---
 
@@ -73,7 +73,7 @@ FunnelScript must prove measurable superiority over static spreadsheets on real 
 The Phase 1 freeze may only be lifted when the repository delivers a single, reproducible end-to-end case study documented in `README.md`:
 
 1. **Input:** An anonymized real-world campaign CSV dataset.
-2. **Script:** A concise ($\le 20$ lines) `.fnl` scenario script simulating a real executive decision (e.g., doubling daily ad spend).
+2. **Script:** A concise ($\le 20$ lines) `.fnls` scenario script simulating a real executive decision (e.g., doubling daily ad spend).
 3. **Output:** Automated financial telemetry showing predicted cash exhaustion dates (`CashRunwayChart`) alongside out-of-sample backtest accuracy metrics.
 
 ---
@@ -83,9 +83,9 @@ The Phase 1 freeze may only be lifted when the repository delivers a single, rep
 | Week | Primary Deliverable | Hard Gate / Verification |
 | :--- | :--- | :--- |
 | **Week 1** | Freeze specs, delete TS simulator (`simulator.ts`, `transpiler.ts`), wire UI to Python core, and lock Research Track (A or B). | Web UI and CLI produce bit-identical simulation outputs; paper matches `engine.py`. |
-| **Week 2** | Build real-data CSV importer & parameter calibration module in `src/funnelscript/stdlib/marketing/`. | Running CLI on a real Meta/Google CSV automatically generates a valid `.fnl` model. |
+| **Week 2** | Build real-data CSV importer & parameter calibration module in `src/funnelscript/stdlib/marketing/`. | Running CLI on a real Meta/Google CSV automatically generates a valid `.fnls` model. |
 | **Week 3** | Run 50/50 temporal backtest on real agency campaign data and benchmark against a linear Excel baseline. | Recorded accuracy report comparing FunnelScript vs. Ground Truth vs. Spreadsheet. |
-| **Week 4** | Package end-to-end case study in `README.md` and prune CI to financial/simulation integrity tests. | New user can reproduce the full CSV $\to$ `.fnl` $\to$ Cash Runway workflow in under 5 minutes. |
+| **Week 4** | Package end-to-end case study in `README.md` and prune CI to financial/simulation integrity tests. | New user can reproduce the full CSV $\to$ `.fnls` $\to$ Cash Runway workflow in under 5 minutes. |
 
 ---
 

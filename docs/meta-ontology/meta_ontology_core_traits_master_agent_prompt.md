@@ -29,7 +29,7 @@ Every commit you produce **MUST** obey these hard constraints (from `03_ANTI_PAT
 3. **Zero-Cost Runtime Abstraction:** Perform 100% of Trait conformance checking, diamond-conflict detection, and dimensional verification at compile/lint time. The lowering pass (`compiler/lowering.py`) must erase ontology wrappers into flat `__slots__`-backed DEVS primitives before tick `0` starts—zero runtime reflection (`getattr`/dynamic dispatch) in hot paths.
 4. **Single Source of Truth:** All compilation, lowering, linting, and simulation logic lives strictly in Python (`src/funnelscript/`). Do NOT touch `apps/web/src/lib/simulator.ts` or `transpiler.ts`.
 5. **Explicit, Auditable Data Mapping:** For the `Ingestable` trait, NEVER silently guess or coerce broken CSV/API fields at runtime. All raw-data-to-entity bindings must be driven by an explicit, hashed `mapping.toml` file, with malformed rows routed cleanly to the Dead-Letter Queue (DLQ).
-6. **Backward Compatibility & Zero Shortcuts:** All existing `.fnl` fixtures in `examples/` and `tests/fixtures/` must continue to pass untouched. No `TODO` stubs, no skipped tests, and no raw Python tracebacks for user `.fnl` errors.
+6. **Backward Compatibility & Zero Shortcuts:** All existing `.fnls` fixtures in `examples/` and `tests/fixtures/` must continue to pass untouched. No `TODO` stubs, no skipped tests, and no raw Python tracebacks for user `.fnls` errors.
 
 ---
 
@@ -40,7 +40,7 @@ Execute **Phases 0 through 5** in exact order. Do **NOT** begin Phase $N+1$ unti
 ### Phase 0: Grammar & Contract Specification Freeze
 - **Deliverables:**
   - Author `spec/meta-ontology-traits-v1.md` defining exact syntax and semantics for `entity`, `trait`, `implements`, and the 5 Kernel Primitives (`Pool`, `Flow`, `LedgerAccount`, `CapacityGuard`, `Metric`).
-  - Extend `spec/grammar.ebnf` cleanly without breaking existing `.fnl` syntax.
+  - Extend `spec/grammar.ebnf` cleanly without breaking existing `.fnls` syntax.
 - **Exit Gate:** Grammar passes drift and ambiguity checks; zero regressions on existing parser tests.
 
 ### Phase 1: Kernel Primitives & Lowering Pass (`Compiler -> Runtime`)
@@ -48,7 +48,7 @@ Execute **Phases 0 through 5** in exact order. Do **NOT** begin Phase $N+1$ unti
   - Add span-annotated AST nodes (`EntityDecl`, `TraitDecl`, and the 5 Kernel Primitives) to `src/funnelscript/tokens.py`, `parser.py`, and `compiler/world_ast.py`.
   - Implement `src/funnelscript/compiler/lowering.py` to lower custom `entity` declarations into flat, deterministic DEVS event-machine rules (`event_machine.py`) and double-entry `ledger.py` postings.
   - Ensure `funnelscript fmt` round-trips the new syntax idempotently (`fmt(fmt(s)) == fmt(s)`).
-- **Exit Gate:** Lowered custom entities execute deterministically in `world_executor.py` and `engine.py`; **Suite 2** (`tests/verification/test_lowering_equivalence.py`) proves bit-exact equivalence against hand-written low-level `.fnl` worlds, `PYTHONHASHSEED` independence, and `snapshot()` / `restore()` determinism (**Gate G2**).
+- **Exit Gate:** Lowered custom entities execute deterministically in `world_executor.py` and `engine.py`; **Suite 2** (`tests/verification/test_lowering_equivalence.py`) proves bit-exact equivalence against hand-written low-level `.fnls` worlds, `PYTHONHASHSEED` independence, and `snapshot()` / `restore()` determinism (**Gate G2**).
 
 ### Phase 2: Static Trait Resolution & Dimensional Verification (`linter.py`)
 - **Deliverables:**
@@ -63,7 +63,7 @@ Execute **Phases 0 through 5** in exact order. Do **NOT** begin Phase $N+1$ unti
 
 ### Phase 3: Official Standard Trait Package (`core/commerce_traits`)
 - **Deliverables:**
-  - Create `packages/core/commerce_traits/` (`fpm.toml`, `index.fnl`, `README.md`) at version `0.1.0`.
+  - Create `packages/core/commerce_traits/` (`fpm.toml`, `index.fnls`, `README.md`) at version `0.1.0`.
   - Define strictly interface-only protocols:
     - Behavioral Traits: `FinancialBinding`, `Capacitated`, `TimeDelayed`, `Attributable`, `Ingestable`.
     - Shared Commerce Contracts: `Offer`, `CustomerCohort`, `Channel`, `Order`, `Settlement`.
@@ -80,7 +80,7 @@ Execute **Phases 0 through 5** in exact order. Do **NOT** begin Phase $N+1$ unti
 ### Phase 5: Flagship Migration, Fuzzing & Performance Certification
 - **Deliverables:**
   - Refactor flagship packages (`ecommerce/d2c_scale` and `leadgen/sales_capacity`, where present) to declare domain entities (`CODParcel`, `SalesLead`, `SalesRepDesk`) via `core/commerce_traits`.
-  - Build `examples/holistic_8ps_composition.fnl` demonstrating two independent `fpm` packages interoperating cleanly on a single `LedgerAccount` and `CustomerCohort`.
+  - Build `examples/holistic_8ps_composition.fnls` demonstrating two independent `fpm` packages interoperating cleanly on a single `LedgerAccount` and `CustomerCohort`.
   - Implement and run:
     - **Suite 3:** `tests/test_cross_package_interop.py` (**Gate G4**).
     - **Suite 4:** `tests/verification/test_meta_ontology_invariants.py` (Hypothesis conservation fuzzing across 500+ generated graphs verifying non-negativity, mass conservation, capacity ceilings, and $\sum \text{Debits}_c(t) - \sum \text{Credits}_c(t) = 0$) (**Gate G3**).
@@ -93,7 +93,7 @@ Execute **Phases 0 through 5** in exact order. Do **NOT** begin Phase $N+1$ unti
 
 For **EVERY** phase, follow this exact 5-step protocol:
 1. **Plan:** Re-read the relevant sections of `docs/meta-ontology/01..04`. Output a concise file-level plan and confirm compliance with the 4-item PR checklist in `03_ANTI_PATTERNS_AND_GUARDRAILS.md`.
-2. **Implement:** Write clean, type-annotated Python and `.fnl` code strictly within the current phase's scope.
+2. **Implement:** Write clean, type-annotated Python and `.fnls` code strictly within the current phase's scope.
 3. **Verify:** Run the phase's targeted verification suite AND the full regression suite (`pytest` + `ruff check .`).
 4. **Checkpoint:** Update `META_ONTOLOGY_STATE.json` with status, modified files, test counts, and measured gate metrics. Propose a clean conventional commit message (e.g., `feat(meta-ontology): complete phase 1 kernel primitives and lowering pass`).
 5. **Gate Pause:** Stop at the end of the phase, present a concise **Phase Completion Report** (Files Changed, Tests Passed, Gates Verified, Any Risks/Blockers), and wait for my explicit approval (`Proceed to Phase N+1`) before continuing.

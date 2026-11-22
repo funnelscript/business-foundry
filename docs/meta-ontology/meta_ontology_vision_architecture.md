@@ -11,7 +11,7 @@ FunnelScript aims to be a **Holistic Marketing & Strategy Execution Language** c
 **Our Target State:**
 1. **A Small, Mathematically Rigid Core:** The FunnelScript engine (`parser.py`, `linter.py`, `engine.py`, `ledger.py`) stays lean, deterministic, and domain-agnostic at the surface level—understanding *conservation laws, time delays, queues, dimensional units, and double-entry accounting*.
 2. **Infinite Community Extensibility via `fpm`:** Any domain expert or organization can author an `fpm` package defining arbitrary business objects (e.g., `CODParcel`, `BrandEquity`, `WholesaleDistributor`, `ClinicChair`, `SaaSSeat`) and the core engine immediately knows how to **type-check, simulate, financially audit, and optimize** them.
-3. **Guaranteed Cross-Package Interoperability:** Two independent `fpm` packages authored by different teams (e.g., `ecommerce/d2c_scale` and `crm/retention_cohorts`) can plug into the same `.fnl` strategy file and exchange customers, orders, and cash flows seamlessly without schema collisions.
+3. **Guaranteed Cross-Package Interoperability:** Two independent `fpm` packages authored by different teams (e.g., `ecommerce/d2c_scale` and `crm/retention_cohorts`) can plug into the same `.fnls` strategy file and exchange customers, orders, and cash flows seamlessly without schema collisions.
 4. **Raw Data to Live Business Objects:** Messy external telemetry (CSV, Meta Ads, Stripe, Segment, ERP logs) can be mapped declaratively onto these typed objects so real-world business reality drives the simulation.
 
 ---
@@ -78,7 +78,7 @@ To solve the cold-start and cross-package compatibility problem, FunnelScript sh
 
 ---
 
-## 5. Conceptual `.fnl` Example (How a Community Author Uses It)
+## 5. Conceptual `.fnls` Example (How a Community Author Uses It)
 
 ```fnl
 import "core/commerce_traits" as std;

@@ -28,7 +28,7 @@ A Meta-Ontology system cannot be verified by testing a single hardcoded scenario
 ### Suite 2: Lowering Equivalence & Determinism Tests
 * **Location:** `tests/verification/test_lowering_equivalence.py`
 * **What to Test:**
-  * **Behavioral Equivalence:** A strategy written using high-level `entity ... implements Trait` syntax must produce **bit-for-bit identical** event traces, RNG draws, and SHA-256 ledger hashes as the equivalent hand-written low-level `.fnl` world.
+  * **Behavioral Equivalence:** A strategy written using high-level `entity ... implements Trait` syntax must produce **bit-for-bit identical** event traces, RNG draws, and SHA-256 ledger hashes as the equivalent hand-written low-level `.fnls` world.
   * **Hash-Seed Independence:** Running lowered entity simulations across multiple randomized `PYTHONHASHSEED` values yields identical outputs.
   * **Snapshot & Resume:** Splitting a simulation containing custom entities at $t_{\text{split}}$, calling `snapshot()` / `restore()`, and finishing to $T$ matches an uninterrupted $0 \to T$ run identically.
 
@@ -38,7 +38,7 @@ A Meta-Ontology system cannot be verified by testing a single hardcoded scenario
   * Author two completely separate mock `fpm` packages that do **not** know about each other—only sharing `core/commerce_traits`:
     * `pkg_a/paid_acquisition` (produces `Order` entities implementing `std.FinancialBinding` + `std.Attributable`).
     * `pkg_b/retention_engine` (consumes any entity implementing `std.CustomerCohort` + `std.FinancialBinding`).
-  * Import both in a single consumer `.fnl` strategy file and assert:
+  * Import both in a single consumer `.fnls` strategy file and assert:
     * Clean compilation and dimensional linting across package boundaries.
     * Single unified `LedgerAccount` trial balance ($\sum \text{Debits} = \sum \text{Credits}$ at every tick).
     * Zero dropped or duplicated entities across the handoff boundary.
@@ -66,7 +66,7 @@ A Meta-Ontology system cannot be verified by testing a single hardcoded scenario
 ### Suite 6: Zero-Overhead Performance Benchmark
 * **Location:** `scripts/benchmark_meta_ontology.py`
 * **What to Test:**
-  * Compare execution time and peak memory of a `100,000`-event simulation using Trait-based `entity` definitions vs. raw low-level `.fnl` rules.
+  * Compare execution time and peak memory of a `100,000`-event simulation using Trait-based `entity` definitions vs. raw low-level `.fnls` rules.
   * **Hard Gate:** Overhead of lowered Meta-Ontology entities MUST be $\le 5\%$ in wall-clock runtime and $\le 5\%$ in peak memory, proving zero runtime reflection tax.
 
 ---
