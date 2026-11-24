@@ -27,7 +27,7 @@ Runtime execution is zero-cost: trait conformance, diamond-conflict disambiguati
 ### 2.1 Trait Declaration
 A trait defines an abstract interface contract comprising required typed fields and lifecycle handler signatures:
 
-```fnl
+```fnls
 trait TraitIdentifier {
     // Required fields with dimensional typing
     field_name: TypeExpression;
@@ -45,7 +45,7 @@ trait TraitIdentifier {
 ### 2.2 Entity Declaration & Trait Conformance
 Entities define concrete state and behavior by composing Kernel Primitives and implementing Traits:
 
-```fnl
+```fnls
 entity EntityIdentifier implements TraitRefList {
     // Attributes & Dimensional Parameters
     attribute_name: TypeExpression = defaultValue;
@@ -111,7 +111,7 @@ Dimension ::= Currency<ISO_4217>
 The minimal shared vocabulary distributed via `fpm`:
 
 ### 5.1 `FinancialBinding`
-```fnl
+```fnls
 trait FinancialBinding {
     currency: Currency;
     settlement_lag: Duration;
@@ -121,7 +121,7 @@ trait FinancialBinding {
 ```
 
 ### 5.2 `Capacitated`
-```fnl
+```fnls
 trait Capacitated {
     capacity_limit: CapacityGuard;
     on_capacity_exceeded(entity: Object);
@@ -129,7 +129,7 @@ trait Capacitated {
 ```
 
 ### 5.3 `TimeDelayed`
-```fnl
+```fnls
 trait TimeDelayed {
     latency: Duration;
     on_delay_elapsed(entity: Object);
@@ -137,7 +137,7 @@ trait TimeDelayed {
 ```
 
 ### 5.4 `Attributable`
-```fnl
+```fnls
 trait Attributable {
     channel_id: string;
     campaign_id: string;
@@ -146,7 +146,7 @@ trait Attributable {
 ```
 
 ### 5.5 `Ingestable`
-```fnl
+```fnls
 trait Ingestable {
     source_record_id: string;
     source_file_hash: string;

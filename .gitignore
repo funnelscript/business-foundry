@@ -98,3 +98,6 @@ research/
 /schema
 /src
 /tests
+
+# Anti-Slop & Environment Hygiene Guardrails
+*.pyc

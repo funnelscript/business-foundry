@@ -80,7 +80,7 @@ To solve the cold-start and cross-package compatibility problem, FunnelScript sh
 
 ## 5. Conceptual `.fnls` Example (How a Community Author Uses It)
 
-```fnl
+```fnls
 import "core/commerce_traits" as std;
 
 // A community author defines a domain-specific object for MENA e-commerce
